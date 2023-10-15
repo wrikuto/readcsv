@@ -2,14 +2,15 @@
 
 int main(int argc, char **argv)
 {
-	int fd;
+	t_tablesize tablesize;
+	char	***data;
 
 	if (argc == 2)
 	{
-		fd = get_fd(argv[1]);
-		chk_value_of_col(fd);
+		tablesize = chk_and_get_datasize(argv[1]);
+		printf("%zu, %zu\n", tablesize.row, tablesize.col);
+		data = get_data(fd, tablesize);
 	}
 	printf("sucsess\n");
 	return (0);
 }
-
