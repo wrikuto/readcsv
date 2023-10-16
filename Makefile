@@ -9,7 +9,7 @@ SRCS	=\
 		$(SRC_DIR)/main.c \
 		$(SRC_DIR)/get_fd.c \
 		$(SRC_DIR)/utils.c \
-		$(SRC_DIR)/get_data.c
+		$(SRC_DIR)/chk_data.c
 
 OBJS = $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(SRCS))
 

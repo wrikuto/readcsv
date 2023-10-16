@@ -8,8 +8,30 @@
 # include "../get_next_line/get_next_line.h"
 # include <errno.h>
 
-int		get_fd(char *argv);
-void	err_exit(char *str);
-void	chk_value_of_col(int fd);
+typedef struct s_tablesize
+{
+	size_t	row;
+	size_t	col;
+	char	***table;
+}			t_tablesize;
+
+typedef struct s_cellchar
+{
+	size_t	len;
+	char	*posi;
+}				t_cellchar;
+
+
+void		free_sub(char ***ret, size_t i);
+int			get_fd(char *argv);
+void		err_exit(char *str);
+t_tablesize	chk_and_get_datasize(char *arg);
+char		***get_data(int fd, t_tablesize tablesize);
+size_t		head_space_size(char *str);
+// size_t	bottom_space_size(char *str);
+size_t		is_back_dblquo(char *line);
+int			is_head_dbl(char *str);
+int			is_in_dbl(char *str);
+
 
 #endif

@@ -2,21 +2,6 @@
 
 
 
-void	free_sub(char ***ret, size_t i)
-{
-	size_t	j;
-
-	j = 0;
-	while (j < i)
-	{
-		free(ret[j]);
-		j++;
-	}
-	free(ret);
-	err_exit("2nd malloc failed !");
-}
-
-
 char	***init_table(t_tablesize tablesize)
 {
 	char	***table = NULL;
@@ -40,23 +25,43 @@ char	***init_table(t_tablesize tablesize)
 	return (table);
 }
 
-
-
-
-
-
-size_t	*len_of_rowdata(char *line, t_tablesize tablesize)
+size_t	len_cellchar(char *str, size_t	in_dbl_quo)
 {
-	size_t	*sublen = NULL;
-	size_t	in_dbl_quo = 0;
-	size_t	sub_posi = 0;
 	size_t	i = 0;
-	size_t	len = 0;
 
-	sublen = malloc(sizeof(size_t) * tablesize.col);
-	if (sublen == NULL)
-		err_exit("int malloc failed!");
+	if (in_dbl_quo >= 2 && is_in_dbl(str))
+	{
+		while (str[i] != '"')
+			i++;
+		while (str[i - 1] == ' ' || str[i - 1] == '\t')
+			i--;
+		printf("TEST: %zu\n", i);
 
+	}
+	else
+	{
+		while (str[i] != ',' && str[i] != '\n' && str[i] != '\0')
+			i++;
+		while (str[i - 1] == ' ' || str[i - 1] == '\t')
+			i--;
+	}
+	return (i);
+}
+
+// 取得したlineから、各列の文字列の長さを取得する。
+t_cellchar	*cellchar_len_posi(char *line, t_tablesize tablesize)
+{
+	t_cellchar	*cellchar = NULL;
+	size_t		in_dbl_quo = 0;
+	size_t		crnt = 0;
+	size_t		i = 0;
+	size_t		len = 0;
+
+	cellchar = malloc(sizeof(t_cellchar) * tablesize.col);
+	if (cellchar == NULL)
+		err_exit("cellchar malloc failed!");
+
+	// 先に先頭の空白を飛ばす
 	line += head_space_size(line);
 	while (1)
 	{
@@ -66,13 +71,16 @@ size_t	*len_of_rowdata(char *line, t_tablesize tablesize)
 			i++;
 			if (in_dbl_quo % 2 == 1)
 				i += head_space_size(&line[i]);
-		}
-		if ((in_dbl_quo % 2 == 0) && (line[i] == ',' || line[i] == '\n' || line[i] == '\0'))
+		}	
+		// ダブルクォテーション内でなく、区切り文字であれば
+		if ((in_dbl_quo % 2 == 0) && (line[i] == ',' ||  line[i] == '\n' || line[i] == '\0'))
 		{
-			sublen[sub_posi] = len - bottom_space_size(&line[i]);
+			cellchar[crnt].len = len_cellchar(&line[i - len - is_back_dblquo(&line[i])], in_dbl_quo);
+			cellchar[crnt].posi = &line[i - len - is_back_dblquo(&line[i])];
+			// 次の列の文字列の先頭の空白を飛ばす
 			i += head_space_size(&line[i]);
 			len = 0;
-			sub_posi++;
+			crnt++;
 		}
 		else
 			len++;
@@ -81,66 +89,76 @@ size_t	*len_of_rowdata(char *line, t_tablesize tablesize)
 			break ;
 		i++;
 	}
-	return (sublen);
+	return (cellchar);
 }
 
+
+// char	***get_data(int fd, t_tablesize tablesize)
+// {
+// 	char	***table = NULL;
+// 	char	*line = NULL;
+// 	t_cellchar	*cellchar = NULL;
+// 	size_t	i = 0;
+// 	size_t	j = 0;
+// 	size_t	k = 0;
+
+// 	table = init_table(tablesize);
+
+// 	while (i < tablesize.col)
+// 	{
+// 		line = get_next_line(fd);
+// 		j = 0;
+// 		while (j < tablesize.row)
+// 		{
+// 			cellchar = cellchar_len_posi(line, tablesize);
+// 			if (cellchar[j].len == 0)
+// 			{
+// 				table[i][j] = calloc(256, sizeof(char));
+// 				break ;
+// 			}
+// 			table[i][j] = malloc(sizeof(char) * (cellchar[j].len + 1));
+// 			table[i][j][cellchar[j].len] = '\0';
+// 				k = 0;
+// 			while (k < cellchar[j].len)
+// 			{
+// 				table[i][j][k] = *(cellchar[j].posi + k);
+// 				k++;
+// 			}
+// 			j++;
+// 		}
+// 		i++;
+// 	}
+// 	return (table);
+// }
+
+
+			// printf("POSI: %s\n", &line[i - len - is_back_dblquo(&line[i])]);
+			// printf("len: %zu\n", len_cellchar(&line[i - len - is_back_dblquo(&line[i])]));
+
+
+
 // -----
+
+
 int main()
 {
 	// char *line = "892,3,\"Kelly, Mr. James\",male,34.5,0,0,330911,7.8292,,Q";
-	char *line = "    PassengerId  ,\"   Pclass   \",Name,Sex,Age,SibSp   ,Parch,Ticket,Fare,Cabin,Embarked    ";
-	size_t *data;
+	char *line = "892  ,  3  ,  \"   Kelly, Mr. James   \"   ,   male,34.5,0,0,330911,7.8292,,  \" Q \"   ";
+	t_cellchar *data;
 	t_tablesize tablesize;
 
 	tablesize.col = 11;
 
-	data = len_of_rowdata(line, tablesize);
+	data = cellchar_len_posi(line, tablesize);
 
 	// printf("%s", line);
 	int i = 0;
 	while (i < 11)
 	{
-		printf("%zu\n", data[i]);
+		printf("%zu, %s\n", data[i].len, (data[i].posi));
 		i++;
 	}
 	free (data);
 	return (0);
 
 }
-
-char	***get_data(int fd, t_tablesize tablesize)
-{
-	char	***table = NULL;
-	char	*line;
-	size_t	i = 0;
-	size_t	j = 0;
-	size_t	k = 0;
-
-	table = init_table(tablesize);
-
-	while (i < tablesize.col)
-	{
-		j = 0;
-		while (j < tablesize.row)
-		{
-			k = 0;
-			// table[i][j] = malloc(sizeof(char) * )
-			while (k < 42)
-			{
-
-			}
-			j++;
-		}
-		i++;
-	}
-
-	return (table);
-}
-
-
-// char	*get_columns(char ***data, int fd)
-// {
-// 	size_t	j = 0;
-
-// 	while ()
-// }
