@@ -1,4 +1,4 @@
-NAME	= libreadcsv.a
+NAME	= readcsv
 
 INC		= ./inc
 GNL		= ./get_next_line
@@ -24,12 +24,12 @@ all:		$(OBJ_DIR) $(NAME)
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 				$(CC) $(FLAGS) -c $< -o $@
 
-# $(NAME):		$(OBJS) $(GNL_A)
-# 				$(CC) $(FLAGS) $(OBJS) -L$(GNL) -lgnl -o $(NAME)
+$(NAME):		$(OBJS) $(GNL_A)
+				$(CC) $(FLAGS) $(OBJS) -L$(GNL) -lgnl -o $(NAME)
 
-$(NAME): $(OBJS) $(GNL_A)
-	ar rc $(NAME) $(OBJS)
-	ranlib $(NAME)
+# $(NAME): $(OBJS) $(GNL_A)
+# 	ar rc $(NAME) $(OBJS)
+# 	ranlib $(NAME)
 
 
 $(GNL_A):

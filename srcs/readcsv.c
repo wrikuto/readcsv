@@ -21,33 +21,28 @@ char	***readcsv(char *filename)
 
 
 
+
+
 // ---
 
 // テスト用のmain
 
 
-// int main()
-// {
-// 	// t_tablesize tablesize;
-// 	char	***table;
+int main(int argc, char **argv)
+{
+	// t_tablesize tablesize;
+	char	***table;
 
-// 	table = readcsv("./tests/ken.csv");
-// 	print_table(table);
-// 	free_table(table);
-// 	// if (argc == 2)
-// 	// {
-// 	// 	tablesize = chk_and_get_datasize(argv[1]);
-// 	// 	fd = open(argv[1], O_RDONLY);
-// 	// 	table = get_data(fd, tablesize);
-// 	// 	print_table(table);
-// 	// 	free_table(table);
-// 	// 	close(fd);
-// 	// 	printf("\nsucsess\n");
-// 	// }
-// 	return (0);
-// }
+	if (argc != 2)
+		return (0);
+	table = readcsv(argv[1]);
+	print_table(table);
+	free_table(table);
 
-// __attribute__((destructor))
-// static void destructor() {
-//     system("leaks -q readcsv");
-// }
+	return (0);
+}
+
+__attribute__((destructor))
+static void destructor() {
+    system("leaks -q readcsv");
+}

@@ -101,7 +101,7 @@ char	***get_data(int fd, t_tablesize tablesize)
 				table[i][j] = calloc(16, sizeof(char));
 				if (table[i][j] == NULL)
 					err_exit("calloc fail get_data");
-				strcpy(table[i][j], "NaN");
+				strcpy(table[i][j], "???");
 			}
 			else
 			{
