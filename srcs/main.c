@@ -10,7 +10,7 @@ void	print_table(char ***table)
 		j = 0;
 		while (table[i][j] != NULL)
 		{
-			printf("%s |", table[i][j]);
+			printf("%s ,", table[i][j]);
 			j++;
 		}
 		printf("\n");
@@ -27,17 +27,17 @@ int main(int argc, char **argv)
 	if (argc == 2)
 	{
 		tablesize = chk_and_get_datasize(argv[1]);
-		// printf("%zu, %zu\n", tablesize.row, tablesize.col);
 		fd = open(argv[1], O_RDONLY);
 		table = get_data(fd, tablesize);
 		print_table(table);
-		// printf("%s\n", table[1][0]);
-		// printf("%s\n", table[1][1]);
-		// printf("%s\n", table[1][2]);
-		// printf("%s\n", table[1][3]);
 		free_table(table);
 		close(fd);
 		printf("\nsucsess\n");
 	}
 	return (0);
+}
+
+__attribute__((destructor))
+static void destructor() {
+    system("leaks -q readcsv");
 }

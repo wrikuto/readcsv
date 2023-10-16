@@ -29,7 +29,7 @@ t_tablesize	chk_and_get_datasize(char *arg)
 	fd = get_fd(arg);
 	line = get_next_line(fd);
 	tablesize.col = number_of_col(line);
-
+	free(line);
 	while(1)
 	{
 		line = get_next_line(fd);
@@ -41,6 +41,7 @@ t_tablesize	chk_and_get_datasize(char *arg)
 			close(fd);
 			err_exit("ERROR: The number of columns does not match.");
 		}
+		free(line);
 		row++;
 	}
 	close(fd);
