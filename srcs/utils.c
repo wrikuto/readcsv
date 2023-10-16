@@ -1,17 +1,43 @@
 #include "../inc/readcsv.h"
 
-void	free_sub(char ***ret, size_t i)
+void	free_sub(char ***table, size_t i)
 {
 	size_t	j;
 
 	j = 0;
 	while (j < i)
 	{
-		free(ret[j]);
+		free(table[j]);
 		j++;
 	}
-	free(ret);
+	free(table);
 	err_exit("2nd malloc failed !");
+}
+
+void	free_table(char	***table)
+{
+	size_t	i = 0;
+	size_t	j = 0;
+
+
+	while (table[i] != NULL)
+	{
+		j = 0;
+		while (table[i][j] != NULL)
+		{
+			free(table[i][j]);
+			j++;
+		}
+		i++;
+	}
+
+	i = 0;
+	while (table[i] != NULL)
+	{
+		free(table[i]);
+		i++;
+	}
+	free(table);
 }
 
 
@@ -32,23 +58,10 @@ size_t	head_space_size(char *str)
 		str++;
 	while (str[i] == ' ' || str[i] == '\t')
 		i++;
-	// printf("head: %zu\n", i);
 	return (i);
 }
 
-// "で閉じられていたら1を返す
-size_t	is_back_dblquo(char *str)
-{
-	size_t	i = 0;
 
-	if (*str == ',' || *str == '\n' || *str == '\0')
-		str--;
-	while (*str == ' '|| str[i] == '\t')
-		str--;
-	if (*str == '"')
-		return (1);
-	return (0);
-}
 
 // ダブルクォテーション内か判定
 int	is_in_dbl(char *str)
@@ -61,7 +74,6 @@ int	is_in_dbl(char *str)
 	}
 	return (1);
 }
-
 
 
 
@@ -84,3 +96,16 @@ int	is_in_dbl(char *str)
 // }
 
 
+// // "で閉じられていたら1を返す
+// size_t	is_back_dblquo(char *str)
+// {
+// 	size_t	i = 0;
+
+// 	if (*str == ',' || *str == '\n' || *str == '\0')
+// 		str--;
+// 	while (*str == ' '|| str[i] == '\t')
+// 		str--;
+// 	if (*str == '"')
+// 		return (1);
+// 	return (0);
+// }
