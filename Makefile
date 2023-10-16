@@ -25,7 +25,7 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 				$(CC) $(FLAGS) -c $< -o $@
 
 $(NAME):		$(OBJS) $(GNL_A)
-				$(CC) $(FLAGS) $(OBJS) -L$(GNL) -lgnl -o $(NAME)
+				$(CC) $(FLAGS) $(OBJS) -L$(GNL) -lgnl -lreadline -o $(NAME)
 
 # $(NAME): $(OBJS) $(GNL_A)
 # 	ar rc $(NAME) $(OBJS)

@@ -54,7 +54,7 @@ static t_cellchar	*cellchar_len_posi(char *line, t_tablesize tablesize)
 			}
 		}
 		// 区切りの処理
-		if ((in_dbl_quo % 2 == 0) && (line[i] == ',' || line[i - 1] == '"' ||  line[i] == '\n' || line[i] == '\0'))
+		if ((in_dbl_quo % 2 == 0) && (line[i] == ',' ||  line[i] == '\n' || line[i] == '\0'))
 		{
 			if (is_blank(headtmp))
 				len = 0;
@@ -101,7 +101,7 @@ char	***get_data(int fd, t_tablesize tablesize)
 				table[i][j] = calloc(16, sizeof(char));
 				if (table[i][j] == NULL)
 					err_exit("calloc fail get_data");
-				strcpy(table[i][j], "???");
+				strcpy(table[i][j], "MISSING\0");
 			}
 			else
 			{

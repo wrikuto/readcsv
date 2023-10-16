@@ -32,17 +32,31 @@ int main(int argc, char **argv)
 {
 	// t_tablesize tablesize;
 	char	***table;
+	// char	*cmd = NULL;
 
 	if (argc != 2)
 		return (0);
 	table = readcsv(argv[1]);
 	print_table(table);
+
+	// while (1)
+	// {
+	// 	cmd = readline("readcsv > ");
+	// 	if (cmd == NULL)
+	// 		return (0) ;
+	// 	if (strcmp(cmd, "quit") == 0)
+	// 	{
+	// 		free(cmd);
+	// 		break ;
+	// 	}
+	// }
+
 	free_table(table);
 
 	return (0);
 }
 
-__attribute__((destructor))
-static void destructor() {
-    system("leaks -q readcsv");
-}
+// __attribute__((destructor))
+// static void destructor() {
+//     system("leaks -q readcsv");
+// }
