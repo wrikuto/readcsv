@@ -1,4 +1,4 @@
-NAME	= readcsv
+NAME	= libreadcsv.a
 
 INC		= ./inc
 GNL		= ./get_next_line
@@ -6,7 +6,7 @@ GNL_A	= $(addprefix $(GNL), libgnl.a)
 SRC_DIR	= ./srcs
 OBJ_DIR	= ./objs
 SRCS	=\
-		$(SRC_DIR)/main.c \
+		$(SRC_DIR)/readcsv.c \
 		$(SRC_DIR)/get_fd.c \
 		$(SRC_DIR)/utils.c \
 		$(SRC_DIR)/chk_data.c \
@@ -24,8 +24,13 @@ all:		$(OBJ_DIR) $(NAME)
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 				$(CC) $(FLAGS) -c $< -o $@
 
-$(NAME):		$(OBJS) $(GNL_A)
-				$(CC) $(FLAGS) $(OBJS) -L$(GNL) -lgnl -o $(NAME)
+# $(NAME):		$(OBJS) $(GNL_A)
+# 				$(CC) $(FLAGS) $(OBJS) -L$(GNL) -lgnl -o $(NAME)
+
+$(NAME): $(OBJS) $(GNL_A)
+	ar rc $(NAME) $(OBJS)
+	ranlib $(NAME)
+
 
 $(GNL_A):
 				$(MAKE) -s -C $(GNL)

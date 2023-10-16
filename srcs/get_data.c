@@ -1,11 +1,10 @@
 #include "../inc/readcsv.h"
 
 
-
-char	***init_table(t_tablesize tablesize)
+// 行列のメモリ確保
+static char	***init_table(t_tablesize tablesize)
 {
 	char	***table = NULL;
-	// size_t	col_size;
 	size_t	i = 0;
 
 	table = malloc(sizeof(char *) * (tablesize.row + 1));
@@ -16,8 +15,7 @@ char	***init_table(t_tablesize tablesize)
 	{
 		table[i] = malloc(sizeof(char *) * (tablesize.col + 1));
 		if (table[i] == NULL)
-			free_sub(table, i);
-
+			err_exit("fail init!");
 		table[i][tablesize.col] = NULL;
 		i++;
 	}
@@ -25,8 +23,8 @@ char	***init_table(t_tablesize tablesize)
 	return (table);
 }
 
-// 取得したlineから、各列の文字列の長さを取得する。
-t_cellchar	*cellchar_len_posi(char *line, t_tablesize tablesize)
+// 取得した行から、各列の文字列の長さを取得する。
+static t_cellchar	*cellchar_len_posi(char *line, t_tablesize tablesize)
 {
 	t_cellchar	*cellchar = NULL;
 	char		*headtmp = NULL;
@@ -38,12 +36,12 @@ t_cellchar	*cellchar_len_posi(char *line, t_tablesize tablesize)
 	cellchar = malloc(sizeof(t_cellchar) * tablesize.col);
 	if (cellchar == NULL)
 		err_exit("cellchar malloc failed!");
-
 	// 先に先頭の空白を飛ばす
 	line += head_space_size(line);
 	headtmp = &line[i];
 	while (1)
 	{
+		// ダブルクォテーションの判定と処理
 		if (line[i] == '"')
 		{
 			if (line[i + 1] == '"')
@@ -55,10 +53,11 @@ t_cellchar	*cellchar_len_posi(char *line, t_tablesize tablesize)
 					headtmp = &line[i];
 			}
 		}
-		
-		// ダブルクォテーション内でなく、区切り文字であれば
+		// 区切りの処理
 		if ((in_dbl_quo % 2 == 0) && (line[i] == ',' || line[i - 1] == '"' ||  line[i] == '\n' || line[i] == '\0'))
 		{
+			if (is_blank(headtmp))
+				len = 0;
 			cellchar[crnt].len = len;
 			cellchar[crnt].posi = headtmp;
 			// 次の列の文字列の先頭の空白を飛ばす
@@ -99,7 +98,7 @@ char	***get_data(int fd, t_tablesize tablesize)
 
 			if (cellchar[j].len == 0)
 			{
-				table[i][j] = calloc(128, sizeof(char));
+				table[i][j] = calloc(16, sizeof(char));
 				if (table[i][j] == NULL)
 					err_exit("calloc fail get_data");
 				strcpy(table[i][j], "NaN");
@@ -107,8 +106,11 @@ char	***get_data(int fd, t_tablesize tablesize)
 			else
 			{
 				table[i][j] = malloc(sizeof(char) * (cellchar[j].len + 1));
+				if (table[i][j] == NULL)
+					err_exit("calloc fail get_data");
 				table[i][j][cellchar[j].len] = '\0';
 					k = 0;
+
 				while (k < cellchar[j].len)
 				{
 					table[i][j][k] = *(cellchar[j].posi + k);
@@ -123,7 +125,6 @@ char	***get_data(int fd, t_tablesize tablesize)
 		free(line);
 		i++;
 	}
-	close(fd);
 	return (table);
 }
 
@@ -155,58 +156,3 @@ char	***get_data(int fd, t_tablesize tablesize)
 
 // }
 
-
-// // 取得したlineから、各列の文字列の長さを取得する。
-// t_cellchar	*cellchar_len_posi(char *line, t_tablesize tablesize)
-// {
-// 	t_cellchar	*cellchar = NULL;
-// 	char		*headtmp = NULL;
-// 	size_t		in_dbl_quo = 0;
-// 	size_t		crnt = 0;
-// 	size_t		i = 0;
-// 	size_t		len = 0;
-
-// 	cellchar = malloc(sizeof(t_cellchar) * tablesize.col);
-// 	if (cellchar == NULL)
-// 		err_exit("cellchar malloc failed!");
-
-// 	// 先に先頭の空白を飛ばす
-// 	line += head_space_size(line);
-// 	headtmp = &line[i];
-// 	while (1)
-// 	{
-// 		if (line[i] == '"')
-// 		{
-// 			if (line[i + 1] == '"')
-// 				i++;
-// 			else
-// 			{
-// 			in_dbl_quo++;
-// 			i++;
-// 				if (in_dbl_quo % 2 == 1)
-// 				{
-// 					i += head_space_size(&line[i]);
-// 					headtmp = &line[i];
-// 				}
-// 			}
-// 		}
-// 		// ダブルクォテーション内でなく、区切り文字であれば
-// 		if ((in_dbl_quo % 2 == 0) && (line[i] == ',' ||  line[i] == '\n' || line[i] == '\0'))
-// 		{
-// 			cellchar[crnt].len = len;
-// 			cellchar[crnt].posi = headtmp;
-// 			// 次の列の文字列の先頭の空白を飛ばす
-// 			i += head_space_size(&line[i]);
-// 			headtmp = &line[i + 1];
-// 			len = 0;
-// 			crnt++;
-// 		}
-// 		else
-// 			len++;
-
-// 		if (line[i] == '\n' || line[i] == '\0')
-// 			break ;
-// 		i++;
-// 	}
-// 	return (cellchar);
-// }

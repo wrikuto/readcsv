@@ -1,24 +1,15 @@
 #include "../inc/readcsv.h"
 
-void	free_sub(char ***table, size_t i)
+void	err_exit(char *str)
 {
-	size_t	j;
-
-	j = 0;
-	while (j < i)
-	{
-		free(table[j]);
-		j++;
-	}
-	free(table);
-	err_exit("2nd malloc failed !");
+	printf("%s\nerrno: %s\n",str ,strerror(errno));
+	exit (1);
 }
 
 void	free_table(char	***table)
 {
 	size_t	i = 0;
 	size_t	j = 0;
-
 
 	while (table[i] != NULL)
 	{
@@ -40,11 +31,22 @@ void	free_table(char	***table)
 	free(table);
 }
 
-
-void	err_exit(char *str)
+void	print_table(char ***table)
 {
-	printf("%s\nerrno: %s\n",str ,strerror(errno));
-	exit (1);
+	size_t	i = 0;
+	size_t	j = 0;
+
+	while (table[i] != NULL)
+	{
+		j = 0;
+		while (table[i][j] != NULL)
+		{
+			printf("%s ,", table[i][j]);
+			j++;
+		}
+		printf("\n");
+		i++;
+	}
 }
 
 size_t	head_space_size(char *str)
@@ -53,7 +55,6 @@ size_t	head_space_size(char *str)
 
 	if (*str == '\n' || *str == '\0')
 		return (0);
-
 	if (*str == ',')
 		str++;
 	while (str[i] == ' ' || str[i] == '\t')
@@ -61,19 +62,24 @@ size_t	head_space_size(char *str)
 	return (i);
 }
 
-
-
-// ダブルクォテーション内か判定
-int	is_in_dbl(char *str)
+int	is_blank(char *str)
 {
-	while (*str != '"')
+	size_t	i = 0;
+	while(str[i] == ' ' || str[i] == '\t')
+		i++;
+	if (str[i] == '"')
 	{
-		str--;
-		if (*str == ',')
-			return (0);
+		i++;
+		while (str[i] == ' ' || str[i] == '\t')
+			i++;
+		if (str[i] == '"' && str[i + 1] != '"')
+			return (1);
 	}
-	return (1);
+	else if (str[i] == ',')
+		return (1);
+	return (0);
 }
+
 
 
 

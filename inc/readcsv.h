@@ -22,16 +22,14 @@ typedef struct s_cellchar
 }				t_cellchar;
 
 
-void		free_sub(char ***ret, size_t i);
 void		free_table(char	***table);
-
+void		print_table(char ***table);
 int			get_fd(char *argv);
 void		err_exit(char *str);
 t_tablesize	chk_and_get_datasize(char *arg);
 char		***get_data(int fd, t_tablesize tablesize);
 size_t		head_space_size(char *str);
 int			is_head_dbl(char *str);
-int			is_in_dbl(char *str);
-
+int			is_blank(char *str);
 
 #endif
