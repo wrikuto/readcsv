@@ -48,7 +48,7 @@ static t_cellchar	*cellchar_len_posi(char *line, t_tablesize tablesize)
 				i++;
 			else
 			{
-			in_dbl_quo++;
+				in_dbl_quo++;
 				if (in_dbl_quo % 2 == 1)
 					headtmp = &line[i];
 			}
