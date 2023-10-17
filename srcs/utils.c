@@ -31,24 +31,6 @@ void	free_table(char	***table)
 	free(table);
 }
 
-void	print_table(char ***table)
-{
-	size_t	i = 0;
-	size_t	j = 0;
-
-	while (table[i] != NULL)
-	{
-		j = 0;
-		while (table[i][j] != NULL)
-		{
-			printf("%s ,", table[i][j]);
-			j++;
-		}
-		printf("\n");
-		i++;
-	}
-}
-
 size_t	head_space_size(char *str)
 {
 	size_t	i = 0;
