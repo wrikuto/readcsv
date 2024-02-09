@@ -14,7 +14,7 @@ static char	*ft_substr(char const *s, unsigned int start, size_t len)
 	new = malloc(new_len);
 	if (new == NULL)
 		return (NULL);
-	ft_memcpy(new, s + start, new_len - 1);
+	memcpy(new, s + start, new_len - 1);
 	new[new_len - 1] = '\0';
 	return (new);
 }

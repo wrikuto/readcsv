@@ -90,38 +90,43 @@ t_table	**get_data(int fd, t_tablesize tbl_size)
 	while (i < tbl_size.row)
 	{
 		line = get_next_line(fd);
-		j = 0;
-		while (j < tbl_size.col)
+		if (line[0] == '\n')
+			;
+		else
 		{
-			cellchar = cellchar_len_posi(line, tbl_size);
-			if (cellchar[j].len == 0)
+			j = 0;
+			while (j < tbl_size.col)
 			{
-				table[i][j].value.str_val = calloc(16, sizeof(char));
-				if (table[i][j].value.str_val == NULL)
-					err_exit("calloc fail get_data");
-				strcpy(table[i][j].value.str_val, "MISSING\0");
-			}
-			else
-			{
-				table[i][j].value.str_val = malloc(sizeof(char) * (cellchar[j].len + 1));
-				if (table[i][j].value.str_val == NULL)
-					err_exit("calloc fail get_data");
-				table[i][j].value.str_val[cellchar[j].len] = '\0';
-					k = 0;
-
-				while (k < cellchar[j].len)
+				cellchar = cellchar_len_posi(line, tbl_size);
+				if (cellchar[j].len == 0)
 				{
-					table[i][j].value.str_val[k] = *(cellchar[j].posi + k);
-					if (*(cellchar[j].posi + k) == '"' && *(cellchar[j].posi + k + 1) == '"')
-						cellchar[j].posi++;
-					k++;
+					table[i][j].value.str_val = calloc(16, sizeof(char));
+					if (table[i][j].value.str_val == NULL)
+						err_exit("calloc fail get_data");
+					strcpy(table[i][j].value.str_val, "MISSING\0");
 				}
+				else
+				{
+					table[i][j].value.str_val = malloc(sizeof(char) * (cellchar[j].len + 1));
+					if (table[i][j].value.str_val == NULL)
+						err_exit("calloc fail get_data");
+					table[i][j].value.str_val[cellchar[j].len] = '\0';
+						k = 0;
+
+					while (k < cellchar[j].len)
+					{
+						table[i][j].value.str_val[k] = *(cellchar[j].posi + k);
+						if (*(cellchar[j].posi + k) == '"' && *(cellchar[j].posi + k + 1) == '"')
+							cellchar[j].posi++;
+						k++;
+					}
+				}
+				free(cellchar);
+				j++;
 			}
-			free(cellchar);
-			j++;
+			i++;
 		}
 		free(line);
-		i++;
 	}
 	return (table);
 }

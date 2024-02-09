@@ -20,7 +20,7 @@ static size_t	number_of_col(char	*line)
 
 t_tablesize	chk_and_get_datasize(char *arg)
 {
-	t_tablesize	tablesize;
+	t_tablesize	tbl_size;
 	size_t		crnt_num;
 	size_t		row = 1;
 	char		*line;
@@ -28,24 +28,30 @@ t_tablesize	chk_and_get_datasize(char *arg)
 
 	fd = get_fd(arg);
 	line = get_next_line(fd);
-	tablesize.col = number_of_col(line);
+	tbl_size.col = number_of_col(line);
+	tbl_size.row = 0;
 	free(line);
 	while(1)
 	{
 		line = get_next_line(fd);
-			if (line == NULL)
-		break;
-		crnt_num = number_of_col(line);
-		if (tablesize.col != crnt_num)
+		if (line == NULL || line[0] == '\0')
+			break;
+		if (line[0] == '\n')
+			;
+		else
 		{
-			close(fd);
-			err_exit("ERROR: The number of columns does not match.");
+			crnt_num = number_of_col(line);
+			if (tbl_size.col != crnt_num)
+			{
+				// close(fd);
+				printf("ERROR: The number of columns does not match.");
+			}
+			row++;
 		}
 		free(line);
-		row++;
 	}
 	close(fd);
-	tablesize.row = row;
-	return (tablesize);
+	tbl_size.row = row;
+	return (tbl_size);
 }
 

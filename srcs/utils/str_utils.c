@@ -4,7 +4,7 @@ void	skip_blank(char **line)
 {
 	if (*line == NULL)
 		return ;
-	while(is_blank(**line))
-		*line++;
+	while(isblank(**line))
+		(*line)++;
 }
 

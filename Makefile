@@ -5,27 +5,33 @@ GNL		= ./get_next_line
 GNL_A	= $(addprefix $(GNL), libgnl.a)
 SRC_DIR	= ./srcs
 OBJ_DIR	= ./objs
-SRCS	=\
-		./srcs/main.c \
-		./srcs/get_fd.c \
-		./srcs/utils.c \
-		./srcs/chk_data.c \
-		./srcs/get_data.c \
-		./srcs/table_operations.c \
-		./srcs/utils/ft_strtrim.c \
-		./srcs/utils/str_utils.c
+SRCS	= \
+		main.c \
+		get_fd.c \
+		utils.c \
+		chk_data.c \
+		get_data.c \
+		table_operations.c \
+		utils/ft_strtrim.c \
+		utils/str_utils.c \
+		utils/ft_split.c \
+		datatype/get_line.c \
+		datatype/identify.c
 
-# OBJS = $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(SRCS))
-OBJS = $(SRCS:.c=.o)
+SRC_PATH = $(addprefix $(SRC_DIR)/, $(SRCS))
+
+
+OBJS = $(patsubst %.c,$(OBJ_DIR)/%.o, $(SRCS))
 
 CC		= gcc
 FLAGS	=  -I$(INC)
-RM		= rm -f
+RM		= rm -rf
 
 all:		$(OBJ_DIR) $(NAME)
 
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
+				@mkdir -p $(@D)
 				$(CC) $(FLAGS) -c $< -o $@
 
 $(NAME):		$(OBJS) $(GNL_A)
