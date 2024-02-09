@@ -6,17 +6,20 @@ GNL_A	= $(addprefix $(GNL), libgnl.a)
 SRC_DIR	= ./srcs
 OBJ_DIR	= ./objs
 SRCS	=\
-		$(SRC_DIR)/readcsv.c \
-		$(SRC_DIR)/get_fd.c \
-		$(SRC_DIR)/utils.c \
-		$(SRC_DIR)/chk_data.c \
-		$(SRC_DIR)/get_data.c \
-		$(SRC_DIR)/table_operations.c
+		./srcs/main.c \
+		./srcs/get_fd.c \
+		./srcs/utils.c \
+		./srcs/chk_data.c \
+		./srcs/get_data.c \
+		./srcs/table_operations.c \
+		./srcs/utils/ft_strtrim.c \
+		./srcs/utils/str_utils.c
 
-OBJS = $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(SRCS))
+# OBJS = $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(SRCS))
+OBJS = $(SRCS:.c=.o)
 
-CC		= cc
-FLAGS	= -Wall -Wextra -Werror
+CC		= gcc
+FLAGS	=  -I$(INC)
 RM		= rm -f
 
 all:		$(OBJ_DIR) $(NAME)

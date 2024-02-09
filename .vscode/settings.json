@@ -1,8 +1,13 @@
 {
 	"C_Cpp.errorSquiggles": "disabled",
 	"files.associations": {
+		"*.asm": "asm-collection",
 		"sstream": "c",
 		"__locale": "c",
-		"get_next_line.h": "c"
+		"get_next_line.h": "c",
+		"readcsv.h": "c",
+		"string": "c",
+		"string_view": "c",
+		"format": "c"
 	}
 }

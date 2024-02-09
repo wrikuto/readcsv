@@ -1,22 +1,21 @@
 #include "../inc/readcsv.h"
 
-
 // 行列のメモリ確保
-static char	***init_table(t_tablesize tablesize)
+static t_table	**init_table(t_tablesize tbl_size)
 {
-	char	***table = NULL;
+	t_table	**table = NULL;
 	size_t	i = 0;
 
-	table = malloc(sizeof(char *) * (tablesize.row + 1));
+	table = malloc(sizeof(t_table *) * (tbl_size.row + 1));
 	if (table == NULL)
 		err_exit("1st malloc failed!");
-	table[tablesize.row] = NULL;
-	while (i < tablesize.row)
+	table[tbl_size.row] = NULL;
+	while (i < tbl_size.row)
 	{
-		table[i] = malloc(sizeof(char *) * (tablesize.col + 1));
+		table[i] = malloc(sizeof(t_table *) * (tbl_size.col + 1));
 		if (table[i] == NULL)
 			err_exit("fail init!");
-		table[i][tablesize.col] = NULL;
+		// table[i][tbl_size.col] = NULL;
 		i++;
 	}
 
@@ -54,7 +53,7 @@ static t_cellchar	*cellchar_len_posi(char *line, t_tablesize tablesize)
 			}
 		}
 		// 区切りの処理
-		if ((in_dbl_quo % 2 == 0) && (line[i] == ',' ||  line[i] == '\n' || line[i] == '\0'))
+		if ((in_dbl_quo % 2 == 0) && (line[i] == ',' || line[i] == '\n' || line[i] == '\0'))
 		{
 			if (is_blank(headtmp))
 				len = 0;
@@ -77,43 +76,42 @@ static t_cellchar	*cellchar_len_posi(char *line, t_tablesize tablesize)
 }
 
 
-char	***get_data(int fd, t_tablesize tablesize)
+t_table	**get_data(int fd, t_tablesize tbl_size)
 {
-	char	***table = NULL;
+	t_table	**table;
 	char	*line = NULL;
 	t_cellchar	*cellchar = NULL;
 	size_t	i = 0;
 	size_t	j = 0;
 	size_t	k = 0;
 
-	table = init_table(tablesize);
+	table = init_table(tbl_size);
 
-	while (i < tablesize.row)
+	while (i < tbl_size.row)
 	{
 		line = get_next_line(fd);
 		j = 0;
-		while (j < tablesize.col)
+		while (j < tbl_size.col)
 		{
-			cellchar = cellchar_len_posi(line, tablesize);
-
+			cellchar = cellchar_len_posi(line, tbl_size);
 			if (cellchar[j].len == 0)
 			{
-				table[i][j] = calloc(16, sizeof(char));
-				if (table[i][j] == NULL)
+				table[i][j].value.str_val = calloc(16, sizeof(char));
+				if (table[i][j].value.str_val == NULL)
 					err_exit("calloc fail get_data");
-				strcpy(table[i][j], "MISSING\0");
+				strcpy(table[i][j].value.str_val, "MISSING\0");
 			}
 			else
 			{
-				table[i][j] = malloc(sizeof(char) * (cellchar[j].len + 1));
-				if (table[i][j] == NULL)
+				table[i][j].value.str_val = malloc(sizeof(char) * (cellchar[j].len + 1));
+				if (table[i][j].value.str_val == NULL)
 					err_exit("calloc fail get_data");
-				table[i][j][cellchar[j].len] = '\0';
+				table[i][j].value.str_val[cellchar[j].len] = '\0';
 					k = 0;
 
 				while (k < cellchar[j].len)
 				{
-					table[i][j][k] = *(cellchar[j].posi + k);
+					table[i][j].value.str_val[k] = *(cellchar[j].posi + k);
 					if (*(cellchar[j].posi + k) == '"' && *(cellchar[j].posi + k + 1) == '"')
 						cellchar[j].posi++;
 					k++;
