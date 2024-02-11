@@ -16,8 +16,7 @@ int	readcsv(char *filename, t_CSVdata *csv_data)
 			printf("col not match.\n");
 		else
 		{
-			// csv_data->cell_tmp = malloc(sizeof(char *) * (csv_data->tbl_size.col + 1))
-			// csv_data->cell_tmp[csv_data->tbl_size.col] = NULL;
+
 			get_datatype(csv_data->fd, csv_data);
 			for (size_t i = 0; i < csv_data->tbl_size.col; i++)
 			{
