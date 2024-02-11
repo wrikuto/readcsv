@@ -34,15 +34,15 @@ bool	is_float(const char *str)
     return (true); // 浮動小数点数である
 }
 
-// bool	is_char(const char *str)
-// {
-// 	size_t	i = 0;
+bool	is_char(const char *str)
+{
+	size_t	i = 0;
 
-// 	while (str[i] != '\0')
-// 	{
-// 		if (isalpha(str[i]) || (33 <= str[i] && str[i] <= 47) || \
-// 		(91 <= str[i] && str[i] <= 96) || (123 <= str[i] && str[i] <= 126))
-// 			return (true);
-// 	}
-// 	return (false);
-// }
+	while (str[i] != '\0')
+	{
+		if (isdigit(str[i]) == 0 && str[i] != '.')
+			return (true);
+        i++;
+	}
+	return (false);
+}

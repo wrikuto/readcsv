@@ -29,12 +29,13 @@ static bool	set_datatype(char *line, t_CSVdata *csv_data)
 		{
 			if (csv_data->cell_tmp[i][0] == '\0')
 				;
-			else if (is_integer(csv_data->cell_tmp[i]) == 1)
-				csv_data->value_type[i] = INT;
-			else if (is_float(csv_data->cell_tmp[i]) == 1)
-				csv_data->value_type[i] = DBL;
-			else
+			else if (is_char(csv_data->cell_tmp[i]))
 				csv_data->value_type[i] = CHAR;
+			else if (is_integer(csv_data->cell_tmp[i]) == 1 && \
+			csv_data->value_type[i] != DBL && csv_data->value_type[i] != CHAR)
+				csv_data->value_type[i] = INT;
+			else if (is_float(csv_data->cell_tmp[i]) == 1 && csv_data->value_type[i] != CHAR)
+				csv_data->value_type[i] = DBL;
 
 			if (csv_data->value_type[i] != NONE)
 				count++;
