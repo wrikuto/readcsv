@@ -1,22 +1,23 @@
 #include "../inc/readcsv.h"
 
-static int	chk_filename(char *str)
+static bool	chk_filename(char *filename)
 {
-	str = strrchr(str, '.');
-	if (str != NULL && strncmp(str, ".csv", 5) == 0)
-		return (1);
-	return (0);
+	filename = strrchr(filename, '.');
+	if (filename != NULL && strncmp(filename, ".csv", 5) == 0)
+		return (true);
+	return (false);
 }
 
-int	get_fd(char *argv)
+int	get_fd(char *filename)
 {
 	int	fd;
 
-	fd = open(argv, O_RDONLY);
-	if (fd == -1 || chk_filename(argv) == 0)
+	if (chk_filename(filename) == 0)
+		printf("ERROR: Invaild file type.\n");
+	else
 	{
-		close (fd);
-		err_exit("ERROR: Invaild file name.");
+		fd = open(filename, O_RDONLY);
+		return (fd);
 	}
-	return (fd);
+	return (-1);
 }

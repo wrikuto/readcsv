@@ -89,7 +89,7 @@ t_table	**get_data(int fd, t_tablesize tbl_size)
 
 	while (i < tbl_size.row)
 	{
-		line = get_next_line(fd);
+		line = get_next_line(fd, GNL_CONSUME);
 		if (line[0] == '\n')
 			;
 		else

@@ -90,6 +90,16 @@ char	(*get_linedata(char *line, t_tablesize tbl_size))[RD_SIZE]
 	return (cell);
 }
 
+char	(*get_splited_line)[RD_SIZE]
+{
+	char	
+	size_t	i = 0;
+	size_t	j = 0;
+
+	
+}
+
+
 t_type	*set_datatype(char (*cell)[RD_SIZE], t_tablesize tbl_size)
 {
 	size_t	i = 0;
@@ -101,7 +111,7 @@ t_type	*set_datatype(char (*cell)[RD_SIZE], t_tablesize tbl_size)
 	{
 		if ((*cell)[0] == '\0')
 			data_type[i] = NONE;
-		else if (is_str(*cell))
+		else if (is_str(*cell) || (*cell)[0] == '"')
 			data_type[i] = CHAR;
 		else if (is_integer(*cell) == 1)
 			data_type[i] = INT;
@@ -119,7 +129,8 @@ t_type	*set_datatype(char (*cell)[RD_SIZE], t_tablesize tbl_size)
 
 t_type	*get_datatype(char *line, t_tablesize tbl_size)
 {
-	char	(*cell)[RD_SIZE];
+	// char	(*cell)[RD_SIZE];
+	char	
 	t_type		*data_type;
 	t_cellchar	*cellchar = NULL;
 	t_type		*data_type;
@@ -127,7 +138,7 @@ t_type	*get_datatype(char *line, t_tablesize tbl_size)
 	
 	cell = get_linedata(line, tbl_size);
 	data_type = malloc(sizeof(t_type) * tbl_size.col);
-	
+
 	while (i < tbl_size.col)
 	{
 		printf("%s\n", cell[i]);

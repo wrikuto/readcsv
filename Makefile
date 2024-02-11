@@ -10,13 +10,13 @@ SRCS	= \
 		get_fd.c \
 		utils.c \
 		chk_data.c \
-		get_data.c \
+		get_value/get_data.c \
 		table_operations.c \
 		utils/ft_strtrim.c \
 		utils/str_utils.c \
-		utils/ft_split.c \
-		datatype/get_line.c \
-		datatype/identify.c
+		utils/csv_split.c \
+		get_datatype/get_datatype.c \
+		get_datatype/identify.c
 
 SRC_PATH = $(addprefix $(SRC_DIR)/, $(SRCS))
 

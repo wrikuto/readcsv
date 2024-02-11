@@ -1,43 +1,37 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <errno.h>
+#include <stdbool.h>
+bool is_integer(const char *str) 
+{
+    char *end;
+    errno = 0;
+    long int val;
 
-// void	set_char(char **line)
-// {
-// 	size_t	i = 0;
-// 	size_t	j = 0;
+	val = strtol(str, &end, 10);
+    if (end == str || *end != '\0' || errno == ERANGE) {
+        // 変換できなかった、または文字列の途中で変換が停止した
+        return (0); // これは整数ではない
+    }
+    return (1); // 整数である
+}
 
-// 	*line = malloc(sizeof(char) * 6);
-// 	while (i < 5)
-// 	{
-// 		(*line)[i] = 'a';
-// 		i++;
-// 	}
-// 	(*line)[i] = '\0';
-// }
+bool	is_float(const char *str)
+{
+    char *end;
+    errno = 0; // エラー値をリセット
+    double val = strtod(str, &end);
 
+    if (end == str || *end != '\0' || errno == ERANGE) {
+        // 変換できなかった、または文字列の途中で変換が停止した
+        return 0; // これは浮動小数点数ではない
+    }
+    return 1; // 浮動小数点数である
+}
 int main()
 {
-	int i = 0;
-	char	(*line)[60];
 
-	line = malloc(sizeof(char *) * 2);
-	while (i < 5)
-	{
-		line[0][i] = 'a';
-		i++;
-	}
-	(*line)[i] = '\0';
-	i = 0;
-	while (i < 5)
-	{
-		line[1][i] = 'b';
-		i++;
-	}
-	(*line)[i] = '\0';
-
+	is_float("123");
 	// set_char(&line);
-	printf("%s\n", line[0]);
-	printf("%s\n", line[1]);
-	free (line);
 	return (0);
 }

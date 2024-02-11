@@ -6,11 +6,11 @@
 /*   By: wrikuto <wrikuto@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 20:17:59 by wrikuto           #+#    #+#             */
-/*   Updated: 2023/10/14 23:34:07 by wrikuto          ###   ########.fr       */
+/*   Updated: 2024/02/10 21:56:05 by wrikuto          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include"get_next_line.h"
+#include "get_next_line.h"
 
 static int	ft_is_newline(char	*buf)
 {
@@ -103,11 +103,23 @@ static	char	*ft_read_and_concatenate(int fd, char *buf)
 	return (buf);
 }
 
-char	*get_next_line(int fd)
+char	*get_next_line(int fd, bool flag_reset)
 {
 	static char	*buf;
 	char		*rtn_line;
 
+	if (flag_reset)
+	{
+		if (buf != NULL)
+			free(buf);
+		if (lseek(fd, 0, SEEK_SET) == -1)
+		{
+			close(fd);
+			perror("ERROR(GNL)");
+			exit(-1);
+		}
+		return (NULL);
+	}
 	if (fd < 0 || BUFFER_SIZE <= 0 || BUFFER_SIZE >= INT_MAX || fd > OPEN_MAX)
 		return (0);
 	buf = ft_read_and_concatenate(fd, buf);
@@ -117,3 +129,4 @@ char	*get_next_line(int fd)
 	buf = ft_to_nextline(buf);
 	return (rtn_line);
 }
+

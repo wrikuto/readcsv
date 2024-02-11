@@ -18,22 +18,20 @@ static size_t	number_of_col(char	*line)
 	return (num + 1);
 }
 
-t_tablesize	chk_and_get_datasize(char *arg)
+int	chk_and_get_tablesize(t_tablesize *tbl_size, int fd)
 {
-	t_tablesize	tbl_size;
 	size_t		crnt_num;
 	size_t		row = 1;
 	char		*line;
-	int
 
-	fd = get_fd(arg);
-	line = get_next_line(fd);
-	tbl_size.col = number_of_col(line);
-	tbl_size.row = 0;
+	// fd = get_fd(arg);
+	line = get_next_line(fd, GNL_CONSUME);
+	tbl_size->col = number_of_col(line);
+	tbl_size->row = 0;
 	free(line);
 	while(1)
 	{
-		line = get_next_line(fd);
+		line = get_next_line(fd, GNL_CONSUME);
 		if (line == NULL || line[0] == '\0')
 			break;
 		if (line[0] == '\n')
@@ -41,17 +39,23 @@ t_tablesize	chk_and_get_datasize(char *arg)
 		else
 		{
 			crnt_num = number_of_col(line);
-			if (tbl_size.col != crnt_num)
+			if (tbl_size->col != crnt_num)
 			{
-				// close(fd);
-				printf("ERROR: The number of columns does not match.");
+				free(line);
+				close(fd);
+				return(-1);
 			}
 			row++;
 		}
 		free(line);
 	}
-	close(fd);
-	tbl_size.row = row;
-	return (tbl_size);
+	tbl_size->row = row;
+	if (lseek(fd, 0, SEEK_SET) == -1)
+	{
+		close(fd);
+		perror("ERROR(GNL)");
+		exit(-1);
+	}
+	return (0);
 }
 
