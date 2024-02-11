@@ -53,7 +53,7 @@ typedef struct	s_CSVdata
 {
 	int			fd;
 	char		*filename;
-	// char		(*cell_tmp)[MAX_CHAR]
+	char		(*cell_tmp)[MAX_CHAR];
 	t_table		**table;
 	t_tablesize	tbl_size;
 	t_type		*value_type;
@@ -86,7 +86,7 @@ int			is_blank(char *str);
 // utils
 void		skip_blank(char **line);
 char		*ft_strtrim(char const *s1, char const *set);
-char		**csv_split(char const *s, char c);
+void	csv_split(char const *str, t_CSVdata *csv_data);
 void		free_split(char **ret, size_t i);
 
 void		get_datatype(int fd, t_CSVdata *csv_data);
