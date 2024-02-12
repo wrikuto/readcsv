@@ -21,6 +21,11 @@ static bool	set_datatype(char *line, t_CSVdata *csv_data)
 	errno = 0;
 
 	csv_split(line, csv_data);
+	if (csv_data->cell_tmp == NULL)
+	{
+		printf("cell_temp fail\n");
+		exit (-1);
+	}
 	while (i < csv_data->tbl_size.col)
 	{
 		if (csv_data->value_type[i] != NONE)
@@ -36,7 +41,6 @@ static bool	set_datatype(char *line, t_CSVdata *csv_data)
 				csv_data->value_type[i] = INT;
 			else if (is_float(csv_data->cell_tmp[i]) == 1 && csv_data->value_type[i] != CHAR)
 				csv_data->value_type[i] = DBL;
-
 			if (csv_data->value_type[i] != NONE)
 				count++;
 		}
@@ -51,10 +55,14 @@ static bool	set_datatype(char *line, t_CSVdata *csv_data)
 void	get_datatype(int fd, t_CSVdata *csv_data)
 {
 	char		*line;
-	char		**split_line;
 	size_t		i = 0;
 	
 	csv_data->value_type = malloc(sizeof(t_type) * csv_data->tbl_size.col);
+	if (csv_data->value_type == NULL)
+	{
+		perror("value_type");
+		exit (-1)
+	}
 	while (i < csv_data->tbl_size.col)
 	{
 		csv_data->value_type[i] = NONE;
@@ -74,7 +82,6 @@ void	get_datatype(int fd, t_CSVdata *csv_data)
 		{
 			if (set_datatype(line, csv_data) == true)
 			{
-				// printf("COUNT: %zu\n", i);
 				free(line);
 				return ;
 			}
@@ -82,7 +89,6 @@ void	get_datatype(int fd, t_CSVdata *csv_data)
 		}
 		free(line);
 	}
-	// printf("COUNT: %zu\n", i);
 	get_next_line(fd, GNL_RESET);
 }
 
