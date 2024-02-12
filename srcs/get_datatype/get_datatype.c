@@ -61,7 +61,7 @@ void	get_datatype(int fd, t_CSVdata *csv_data)
 	if (csv_data->value_type == NULL)
 	{
 		perror("value_type");
-		exit (-1)
+		exit (-1);
 	}
 	while (i < csv_data->tbl_size.col)
 	{
